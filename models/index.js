@@ -1,26 +1,30 @@
 'use strict';
 
-require('pg');
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const pg = require('pg');
 const process = require('process');
 const basename = path.basename(__filename);
 const db = {};
 
 let sequelize;
 
+// Ambil URL Supabase / Vercel
 const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
 if (dbUrl) {
+  // --- JALUR VERCEL / SUPABASE CLOUD ---
+  // Bersihkan query string agar tidak konflik dengan opsi Sequelize
+  const cleanUrl = dbUrl.split('?')[0];
 
-  sequelize = new Sequelize(dbUrl, {
+  sequelize = new Sequelize(cleanUrl, {
     dialect: 'postgres',
-    dialectModule: require('pg'),
+    dialectModule: pg,
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false 
+        rejectUnauthorized: false // Mematikan validasi SSL self-signed Supabase
       }
     },
     logging: false
@@ -37,7 +41,7 @@ if (dbUrl) {
       host: process.env.DB_HOST || '127.0.0.1',
       port: process.env.DB_PORT || 5432,
       dialect: 'postgres',
-      dialectModule: require('pg'),
+      dialectModule: pg,
       logging: false
     }
   );
