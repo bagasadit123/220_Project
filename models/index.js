@@ -1,6 +1,6 @@
 'use strict';
 
-require('pg'); 
+require('pg');
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -18,7 +18,7 @@ if (dbUrl) {
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false
+        rejectUnauthorized: false 
       }
     },
     logging: false
@@ -32,12 +32,12 @@ if (dbUrl) {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT || 5432,
       dialect: 'postgres',
-      dialectOptions: process.env.NODE_ENV === 'production' ? {
+      dialectOptions: {
         ssl: {
           require: true,
-          rejectUnauthorized: false
+          rejectUnauthorized: false 
         }
-      } : {},
+      },
       logging: false
     }
   );
