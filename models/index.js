@@ -1,6 +1,6 @@
 'use strict';
 
-require('pg')
+require('pg'); // Memastikan driver pg ter-load di Vercel
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -24,13 +24,19 @@ if (process.env.DATABASE_URL) {
 } else {
 
   sequelize = new Sequelize(
-    process.env.DB_DATABASE || 'emisi',
-    process.env.DB_USER || 'postgres',
-    process.env.DB_PASS || '123456789',
+    process.env.DB_DATABASE || process.env.DB_NAME || 'emisi',
+    process.env.DB_USER || process.env.DB_USERNAME || 'postgres',
+    process.env.DB_PASS || process.env.DB_PASSWORD || '',
     {
-      host: process.env.DB_HOST || '127.0.0.1',
+      host: process.env.DB_HOST,
       port: process.env.DB_PORT || 5432,
-      dialect: 'postgres', // Dialek langsung di-pass di sini
+      dialect: 'postgres',
+      dialectOptions: process.env.NODE_ENV === 'production' ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      } : {},
       logging: false
     }
   );
