@@ -5,13 +5,10 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js');
 const db = {};
 
 let sequelize;
 
-// Jika berjalan di Vercel / Production menggunakan DATABASE_URL
 if (process.env.DATABASE_URL) {
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
@@ -24,16 +21,15 @@ if (process.env.DATABASE_URL) {
     logging: false
   });
 } else {
-  // Jika berjalan di Lokal (Development)
-  const currentConfig = config[env] || config.development;
+
   sequelize = new Sequelize(
-    process.env.DB_DATABASE || currentConfig.database,
-    process.env.DB_USER || currentConfig.username,
-    process.env.DB_PASS || currentConfig.password,
+    process.env.DB_DATABASE || 'emisi',
+    process.env.DB_USER || 'postgres',
+    process.env.DB_PASS || '123456789',
     {
-      host: process.env.DB_HOST || currentConfig.host,
-      port: process.env.DB_PORT || currentConfig.port,
-      dialect: process.env.DB_DIALECT || currentConfig.dialect || 'postgres',
+      host: process.env.DB_HOST || '127.0.0.1',
+      port: process.env.DB_PORT || 5432,
+      dialect: 'postgres', // Dialek langsung di-pass di sini
       logging: false
     }
   );
