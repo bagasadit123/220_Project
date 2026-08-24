@@ -12,20 +12,17 @@ let sequelize;
 
 const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
-const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
-
 if (dbUrl) {
+
   sequelize = new Sequelize(dbUrl, {
     dialect: 'postgres',
     dialectModule: require('pg'),
-    dialectOptions: isVercel
-      ? {
-          ssl: {
-            require: true,
-            rejectUnauthorized: false
-          }
-        }
-      : {},
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false 
+      }
+    },
     logging: false
   });
 } else {
@@ -41,14 +38,6 @@ if (dbUrl) {
       port: process.env.DB_PORT || 5432,
       dialect: 'postgres',
       dialectModule: require('pg'),
-      dialectOptions: isVercel
-        ? {
-            ssl: {
-              require: true,
-              rejectUnauthorized: false
-            }
-          }
-        : {},
       logging: false
     }
   );
