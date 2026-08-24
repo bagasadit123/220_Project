@@ -6,9 +6,9 @@ const authController = require('../controller/authController');
 const vehicleController = require('../controller/vehicleController');
 const verifyJWT = require('../middleware/auth');
 
-// Auth Routes
-router.post('/auth/register', authController.register);
-router.post('/auth/login', authController.login);
+// Auth Routes (Akses: POST /api/register & POST /api/login)
+router.post('/register', authController.register);
+router.post('/login', authController.login);
 
 // Vehicle Data Routes (Full CRUD - JWT Protected)
 router.get('/vehicles', verifyJWT, vehicleController.getAllVehicles);
