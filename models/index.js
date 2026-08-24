@@ -6,21 +6,34 @@ const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
+const config = require(__dirname + '/../config/config.js');
 const db = {};
 
 let sequelize;
-if (config.use_env_variable && process.env[config.use_env_variable]) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+
+// Jika berjalan di Vercel / Production menggunakan DATABASE_URL
+if (process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
+    logging: false
+  });
 } else {
+  // Jika berjalan di Lokal (Development)
+  const currentConfig = config[env] || config.development;
   sequelize = new Sequelize(
-    process.env.DB_DATABASE || config.database,
-    process.env.DB_USER || config.username,
-    process.env.DB_PASS || config.password,
+    process.env.DB_DATABASE || currentConfig.database,
+    process.env.DB_USER || currentConfig.username,
+    process.env.DB_PASS || currentConfig.password,
     {
-      host: process.env.DB_HOST || config.host,
-      port: process.env.DB_PORT || config.port,
-      dialect: process.env.DB_DIALECT || config.dialect,
+      host: process.env.DB_HOST || currentConfig.host,
+      port: process.env.DB_PORT || currentConfig.port,
+      dialect: process.env.DB_DIALECT || currentConfig.dialect || 'postgres',
       logging: false
     }
   );
