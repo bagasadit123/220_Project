@@ -12,15 +12,17 @@ let sequelize;
 
 const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
+const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+
 if (dbUrl) {
   sequelize = new Sequelize(dbUrl, {
     dialect: 'postgres',
-    dialectOptions: {
+    dialectOptions: isProduction ? {
       ssl: {
         require: true,
-        rejectUnauthorized: false 
+        rejectUnauthorized: false
       }
-    },
+    } : {},
     logging: false
   });
 } else {
@@ -29,15 +31,15 @@ if (dbUrl) {
     process.env.DB_USER || process.env.DB_USERNAME || 'postgres',
     process.env.DB_PASS || process.env.DB_PASSWORD || '',
     {
-      host: process.env.DB_HOST,
+      host: process.env.DB_HOST || '127.0.0.1',
       port: process.env.DB_PORT || 5432,
       dialect: 'postgres',
-      dialectOptions: {
+      dialectOptions: isProduction ? {
         ssl: {
           require: true,
-          rejectUnauthorized: false 
+          rejectUnauthorized: false
         }
-      },
+      } : {}, 
       logging: false
     }
   );
