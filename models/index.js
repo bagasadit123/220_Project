@@ -29,10 +29,13 @@ if (dbUrl) {
     logging: false
   });
 } else {
+
+  const dbPassword = String(process.env.DB_PASS ?? process.env.DB_PASSWORD ?? '');
+
   sequelize = new Sequelize(
     process.env.DB_DATABASE || process.env.DB_NAME || 'emisi',
     process.env.DB_USER || process.env.DB_USERNAME || 'postgres',
-    String(process.env.DB_PASS || process.env.DB_PASSWORD || ''),
+    dbPassword,
     {
       host: process.env.DB_HOST || '127.0.0.1',
       port: process.env.DB_PORT || 5432,
