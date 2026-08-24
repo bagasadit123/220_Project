@@ -1,6 +1,5 @@
 'use strict';
 
-require('pg');
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -10,36 +9,27 @@ const db = {};
 
 let sequelize;
 
-const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
-
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
-
-if (dbUrl) {
-  sequelize = new Sequelize(dbUrl, {
+if (process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
-    dialectOptions: isProduction ? {
+    dialectOptions: {
       ssl: {
         require: true,
         rejectUnauthorized: false
       }
-    } : {},
+    },
     logging: false
   });
 } else {
+
   sequelize = new Sequelize(
-    process.env.DB_DATABASE || process.env.DB_NAME || 'emisi',
-    process.env.DB_USER || process.env.DB_USERNAME || 'postgres',
-    process.env.DB_PASS || process.env.DB_PASSWORD || '',
+    process.env.DB_DATABASE || 'emisi',
+    process.env.DB_USER || 'postgres',
+    process.env.DB_PASS || '123456789',
     {
       host: process.env.DB_HOST || '127.0.0.1',
       port: process.env.DB_PORT || 5432,
-      dialect: 'postgres',
-      dialectOptions: isProduction ? {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-      } : {}, 
+      dialect: 'postgres', 
       logging: false
     }
   );
