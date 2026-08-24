@@ -1,6 +1,6 @@
 'use strict';
 
-require('pg'); // Memastikan driver pg ter-load di Vercel
+require('pg'); 
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -10,8 +10,10 @@ const db = {};
 
 let sequelize;
 
-if (process.env.DATABASE_URL) {
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
+const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+
+if (dbUrl) {
+  sequelize = new Sequelize(dbUrl, {
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
@@ -22,7 +24,6 @@ if (process.env.DATABASE_URL) {
     logging: false
   });
 } else {
-
   sequelize = new Sequelize(
     process.env.DB_DATABASE || process.env.DB_NAME || 'emisi',
     process.env.DB_USER || process.env.DB_USERNAME || 'postgres',
