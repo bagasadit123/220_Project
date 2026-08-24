@@ -10,7 +10,7 @@ const db = {};
 
 let sequelize;
 
-const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+const dbUrl = process.env.POSTGRES_URL;
 
 if (dbUrl) {
   sequelize = new Sequelize(dbUrl, {
