@@ -1,0 +1,32 @@
+graph LR
+    %% Actors
+    User((User))
+    Admin((Admin))
+
+    subgraph System ["Sistem API Emisi Kendaraan"]
+        UC_Reg["Register Akun"]
+        UC_Login["Login User / Auth"]
+        UC_GenKey["Generate API Key"]
+        UC_RevKey["Lihat / Revoke Key"]
+        UC_Manage["Kelola Data Kendaraan"]
+        UC_PubAPI["Akses Public API v1<br/>(GET /vehicles, /stats)"]
+        UC_VerifKey["Verifikasi Header x-api-key"]
+
+        %% Relationships within system
+        UC_GenKey -. "<<include>>" .-> UC_Login
+        UC_RevKey -. "<<include>>" .-> UC_Login
+        UC_Manage -. "<<include>>" .-> UC_Login
+        UC_Login -. "<<include>>" .-> UC_Reg
+        UC_PubAPI -. "<<include>>" .-> UC_VerifKey
+    end
+
+    %% User Connections
+    User --> UC_Reg
+    User --> UC_Login
+    User --> UC_GenKey
+    User --> UC_RevKey
+    User --> UC_PubAPI
+
+    %% Admin Connections
+    Admin --> UC_Login
+    Admin --> UC_Manage

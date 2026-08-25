@@ -1,0 +1,29 @@
+erDiagram
+    User ||--o{ ApiKey : "1:N"
+
+    User {
+        int id PK
+        string username
+        string password
+        string role
+        datetime created_at
+    }
+
+    ApiKey {
+        int id PK
+        int user_id FK
+        string key
+        string label
+        datetime created_at
+    }
+
+    Vehicle {
+        int id PK
+        string kategori
+        string tipe_kendaraan
+        int kapasitas_cc
+        string bahan_bakar
+        float efisiensi_km_per_liter
+        float emisi_co2_per_km
+        datetime created_at
+    }

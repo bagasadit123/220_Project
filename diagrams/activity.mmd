@@ -1,0 +1,19 @@
+flowchart TD
+    Start([User / Client]) -->|Request GET /api/v1/stats\nHeader: x-api-key| ReceiveReq[Server API & Middleware:\nMenerima Request & Cek Header x-api-key]
+
+    ReceiveReq --> CheckHeader{Ada\nx-api-key?}
+    
+    CheckHeader -- Tidak --> Err401[Return 401 Unauthorized]
+    Err401 --> SendErr[Kirim Response Error]
+    SendErr --> End([User Terima Response Error])
+
+    CheckHeader -- Ya --> ValidateDB[Validasi Key di DB]
+    
+    ValidateDB --> CheckValid{Key\nValid?}
+    
+    CheckValid -- Tidak --> Err401
+    
+    CheckValid -- Ya --> FetchData[Ambil / Olah Data\nKendaraan dari DB]
+    
+    FetchData --> Res200[Return 200 OK\nJSON Data Stats]
+    Res200 --> SuccessEnd([User Terima Data Stats])
