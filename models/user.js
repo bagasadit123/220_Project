@@ -25,3 +25,9 @@ module.exports = (sequelize, DataTypes) => {
   });
   return User;
 };
+
+class User extends Model {
+  static associate(models) {
+    User.hasMany(models.ApiKey, { foreignKey: 'user_id', as: 'apiKeys' });
+  }
+}
